@@ -1,0 +1,74 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_app/core/utils/app_colors.dart';
+import 'package:movie_app/core/utils/app_images.dart';
+import 'package:movie_app/feature/watchlist/view/widget/watch_list_movies_widget.dart';
+import 'package:movie_app/feature/watchlist/view_model/watchlist_cubit.dart';
+import 'package:movie_app/feature/watchlist/view_model/watchlist_state.dart';
+
+class WatchListScreen extends StatefulWidget {
+  const WatchListScreen({super.key});
+
+  @override
+  State<WatchListScreen> createState() => _WatchListScreenState();
+}
+
+class _WatchListScreenState extends State<WatchListScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => WatchlistCubit(),
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundColor,
+          centerTitle: true,
+          title: Text(
+            'Watchlist',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.whiteColor,
+            ),
+          ),
+        ),
+        body: BlocBuilder<WatchlistCubit, WatchListState>(
+          builder: (context, state) =>
+              state is WatchListEmpty ? emptyState() : fullState(),
+        ),
+      ),
+    );
+  }
+}
+
+Widget emptyState() {
+  return Center(
+    child: Column(
+      spacing: 12,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(AppImages.noWatchlistImage),
+        Text(
+          'There is no movie yet!',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: AppColors.whiteColor,
+          ),
+        ),
+        Text(
+          'Find your movie by Type title, categories, years, etc ',
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.normal,
+            color: AppColors.subTextColor,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget fullState() {
+  return WatchListMoviesWidget();
+}
